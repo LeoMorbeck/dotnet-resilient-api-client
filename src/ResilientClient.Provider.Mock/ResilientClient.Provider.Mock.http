@@ -1,0 +1,6 @@
+@ResilientClient.Provider.Mock_HostAddress = http://localhost:5120
+
+GET {{ResilientClient.Provider.Mock_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
