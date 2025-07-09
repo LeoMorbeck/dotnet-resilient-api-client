@@ -1,0 +1,6 @@
+services:
+  resilientclient.api:
+    image: ${DOCKER_REGISTRY-}resilientclientapi
+    build:
+      context: .
+      dockerfile: src/ResilientClient.Api/Dockerfile
