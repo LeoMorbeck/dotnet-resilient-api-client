@@ -1,6 +1,37 @@
+﻿# docker-compose.yml (Arquivo Base)
 services:
-  resilientclient.api:
-    image: ${DOCKER_REGISTRY-}resilientclientapi
+  resilientclient-api:
     build:
       context: .
       dockerfile: src/ResilientClient.Api/Dockerfile
+    depends_on:
+      - provider-mock
+      - elasticsearch
+    environment:
+      - ProviderMockUrl=http://provider-mock:8080
+      - ASPNETCORE_URLS=http://+:8080
+
+  provider-mock:
+    build:
+      context: .
+      dockerfile: src/ResilientClient.Provider.Mock/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+volumes:
+  elasticsearch-data:
